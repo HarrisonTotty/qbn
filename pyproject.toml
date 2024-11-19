@@ -1,0 +1,77 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# ----- Poetry -----
+
+[tool.poetry]
+name = "qbn"
+version = "0.1.0"
+description = "Quantum-Optimized Boolean Networks"
+authors = ["Harrison Totty <harrison.totty@grainger.com>"]
+readme = "README.md"
+repository = "https://github.com/wwg-internal/hackathon-qbn"
+
+[tool.poetry.group.main.dependencies]
+bloqade = "*"
+keras = "*"
+pandas = "*"
+python = ">=3.11,<3.12"
+tensorflow = "*"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "*"
+poethepoet = "*"
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-order = "*"
+pytest-randomly = "*"
+
+[tool.poetry.group.jupyter.dependencies]
+jupyterlab = "*"
+
+# ----- MyPy -----
+
+[tool.mypy]
+files = "src/**/*.py"
+ignore_errors = false
+ignore_missing_imports = true
+pretty = true
+python_version = "3.12"
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+
+# Only relevant for people who use pyright as the backend of their type analysis
+# tool.
+[tool.pyright]
+include = ["src/qbn"]
+exclude = ["**/__pycache__"]
+executionEnvironments = [{ root = "src/qbn" }]
+
+# ----- Poe the Poet -----
+
+[tool.poe.tasks]
+test.shell = "pylint src/qbn && mypy && pytest"
+
+# ----- Pylint -----
+
+[tool.pylint.main]
+fail-on = ["F", "E"]
+fail-under = 0
+source-roots = ["src/qbn"]
+
+[tool.pylint."messages control"]
+disable = [
+  "missing-module-docstring"
+]
+
+# ----- Pytest -----
+
+[tool.pytest.ini_options]
+addopts = "-v --cov=qbn"
+python_files = "*.py"
+python_functions = "test_*"
+pythonpath = "src/qbn"
+testpaths = "tests"
